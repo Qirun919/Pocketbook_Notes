@@ -1,6 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/nav_graph">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.pocketbook_notes.ui.home.HomeFragment"
+        android:label="Notes"
+        tools:layout="@layout/fragment_home">
+
+        <action
+            android:id="@+id/action_home_to_detail"
+            app:destination="@id/noteDetailFragment" />
+
+        <action
+            android:id="@+id/action_home_to_new"
+            app:destination="@id/newNoteFragment" />
+
+        <action
+            android:id="@+id/action_home_to_trash"
+            app:destination="@id/trashFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/noteDetailFragment"
+        android:name="com.example.pocketbook_notes.ui.notedetail.NoteDetailFragment"
+        android:label="Note detail"
+        tools:layout="@layout/fragment_note_detail">
+
+        <action
+            android:id="@+id/action_detail_to_edit"
+            app:destination="@id/editFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/newNoteFragment"
+        android:name="com.example.pocketbook_notes.ui.newNote.NewNoteFragment"
+        android:label="New note"
+        tools:layout="@layout/fragment_new_note" />
+
+    <fragment
+        android:id="@+id/editFragment"
+        android:name="com.example.pocketbook_notes.ui.editNote.EditNoteFragment"
+        android:label="Edit note"
+        tools:layout="@layout/fragment_edit_note" />
+
+    <fragment
+        android:id="@+id/trashFragment"
+        android:name="com.example.pocketbook_notes.ui.trash.TrashFragment"
+        android:label="Trash"
+        tools:layout="@layout/fragment_trash" />
 
 </navigation>
