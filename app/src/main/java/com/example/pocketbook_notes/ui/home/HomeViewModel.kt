@@ -25,6 +25,12 @@ class HomeViewModel (
 
     val notes: StateFlow<List<Note>> = _notes
 
+    private var allNotes = emptyList<Note>()
+
+    private var searchText = ""
+    private var selectedColour = ""
+    private var newestFirst = true
+
 
     init {
         getNotes()
@@ -32,24 +38,57 @@ class HomeViewModel (
 
     fun getNotes() {
         viewModelScope.launch(Dispatchers.IO) {
-            repo.getAllNotes().collect {items ->
-
-                val active = items
-                    .filter { it.deletedAt == 0L }
-                    .sortedByDescending { it.updatedAt }
-
-                _notes.update {
-                    active
-                }
+            repo.getAllNotes().collect { items ->
+                allNotes = items.filter { it.deletedAt == 0L }
+                applyFilter()
             }
         }
     }
 
-    fun addNote(note: Note) {
-        viewModelScope.launch(Dispatchers.IO) {
-            repo.insertNote(note)
-        }
+    // three filter
+    fun setSearch(text: String) {
+        searchText = text
+        applyFilter()
     }
+
+    fun setColour(colour: String) {
+        selectedColour = colour
+        applyFilter()
+    }
+
+    fun toggleSort(): Boolean {
+        newestFirst = !newestFirst
+        applyFilter()
+        return newestFirst
+    }
+
+    // apply filter
+    private fun applyFilter() {
+        var result = allNotes
+
+        // search
+        if (searchText.isNotEmpty()) {
+            result = result.filter {
+                it.title.contains(searchText, ignoreCase = true) ||
+                        it.text.contains(searchText, ignoreCase = true)
+            }
+        }
+
+        // color
+        if (selectedColour.isNotEmpty()) {
+            result = result.filter { it.colour == selectedColour }
+        }
+
+        // up and down
+        result = if (newestFirst) {
+            result.sortedByDescending { it.updatedAt }
+        } else {
+            result.sortedBy { it.updatedAt }
+        }
+
+        _notes.update { result }
+    }
+
 
 
     companion object {
