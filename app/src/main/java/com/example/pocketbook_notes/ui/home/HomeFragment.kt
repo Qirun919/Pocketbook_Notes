@@ -1,5 +1,6 @@
 package com.example.pocketbook_notes.ui.home
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +18,7 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.pocketbook_notes.R
+import com.example.pocketbook_notes.core.AuthService
 
 class HomeFragment : Fragment() {
 
@@ -104,6 +106,18 @@ class HomeFragment : Fragment() {
             } else {
                 "Oldest first · tap ⇅ for newest first"
             }
+        }
+
+
+        binding.logoutButton.setOnClickListener {
+            AlertDialog.Builder(requireContext())
+                .setTitle("Log out?")
+                .setPositiveButton("Log out") { _, _ ->
+                    AuthService.logout()
+                    findNavController().navigate(R.id.action_home_to_login)
+                }
+                .setNegativeButton("Cancel", null)
+                .show()
         }
     }
 
